@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import localFont from 'next/font/local'
 import type { PlayerDetail } from '@/lib/types'
 import { getJerseyUrl } from '@/lib/utils'
+
+const hnkani = localFont({ src: '../../fonts/HNkani.ttf' })
 
 interface PlayerHeroProps {
   player: PlayerDetail
@@ -55,7 +58,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
   const jerseyUrl = getJerseyUrl(player.name)
 
   return (
-    <section className="relative overflow-hidden" style={{ height: '640px' }}>
+    <section className="relative overflow-hidden" style={{ height: '640px', background: 'linear-gradient(135deg, #102037 0%, #2A435A 100%)' }}>
 
       {/* GRIZZLIES text watermark — upper area, right half, behind player */}
       <div
@@ -64,7 +67,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
         style={{ top: '6%', left: '30%', right: '-4%' }}
       >
         <span
-          className="block font-black uppercase leading-none tracking-tighter whitespace-nowrap"
+          className={`${hnkani.className} block uppercase leading-none tracking-tighter whitespace-nowrap`}
           style={{
             fontSize: 'clamp(80px, 12vw, 172px)',
             backgroundImage:
@@ -119,6 +122,17 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
               className="object-contain object-bottom"
               priority
             />
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '18%',
+                background: 'linear-gradient(to bottom, transparent 0%, #1C3350 100%)',
+                pointerEvents: 'none',
+              }}
+            />
           </div>
 
           {/* Left column — jersey number, name, team — z-20 (on top of image) */}
@@ -146,7 +160,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
               <img
                 src="https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg"
                 alt="Memphis Grizzlies"
-                className="h-10 w-10 shrink-0"
+                className="h-14 w-14 shrink-0"
               />
               <span className="text-xs font-black uppercase leading-tight tracking-wide text-white">
                 {player.teamCity}
@@ -175,6 +189,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
               style={{
                 border: '1px solid rgba(255,255,255,0.18)',
                 borderRadius: '10px',
+                background: 'rgba(255,255,255,0.06)',
               }}
             >
               <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-gold">

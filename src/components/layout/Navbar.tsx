@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 const NAV_LINKS = ['Tickets', 'Team', 'Schedule', 'Media', 'Shop']
@@ -79,15 +80,16 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="relative z-50 bg-midnight">
+    <header className="relative z-50" style={{ backgroundColor: '#102037' }}>
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6" aria-label="Main navigation">
         {/* Logo */}
         <Link href="/" className="flex-shrink-0" aria-label="Memphis Grizzlies home">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg"
+          <Image
+            src="/mg-icon.png"
             alt="Memphis Grizzlies"
-            className="h-10 w-10"
+            width={36}
+            height={36}
+            priority
           />
         </Link>
 
@@ -133,7 +135,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-beale/30 bg-midnight md:hidden">
+        <div className="border-t border-beale/30 md:hidden" style={{ backgroundColor: '#102037' }}>
           <ul className="flex flex-col px-4 py-4">
             {NAV_LINKS.map((label) => (
               <li key={label}>

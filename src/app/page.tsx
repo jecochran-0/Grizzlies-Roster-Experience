@@ -7,6 +7,7 @@ import SortControls, { type SortStat, type SortOrder } from '@/components/roster
 import PlayerGrid from '@/components/roster/PlayerGrid'
 import { fetchRoster } from '@/lib/api'
 import type { RosterPlayer } from '@/lib/types'
+import LoadingScreen from '@/components/ui/LoadingScreen'
 
 export default function RosterPage() {
   const [players, setPlayers] = useState<RosterPlayer[]>([])
@@ -33,6 +34,8 @@ export default function RosterPage() {
   )
 
   return (
+    <>
+    <LoadingScreen show={loading} />
     <div
       className="relative min-h-screen overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #102037 0%, #2A435A 100%)' }}
@@ -85,5 +88,6 @@ export default function RosterPage() {
         </main>
       </div>
     </div>
+    </>
   )
 }

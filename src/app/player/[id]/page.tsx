@@ -13,6 +13,7 @@ import RecentGames from '@/components/player/RecentGames'
 import FanEngagement from '@/components/player/FanEngagement'
 import { fetchPlayer, fetchRoster } from '@/lib/api'
 import type { PlayerDetail, RosterPlayer } from '@/lib/types'
+import LoadingScreen from '@/components/ui/LoadingScreen'
 
 export default function PlayerPage() {
   const { id } = useParams<{ id: string }>()
@@ -32,6 +33,8 @@ export default function PlayerPage() {
   }, [id])
 
   return (
+    <>
+    <LoadingScreen show={loading} />
     <div
       className="min-h-screen"
       style={{ background: 'linear-gradient(135deg, #102037 0%, #2A435A 100%)' }}
@@ -66,5 +69,6 @@ export default function PlayerPage() {
 
       <Footer />
     </div>
+    </>
   )
 }
