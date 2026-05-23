@@ -87,20 +87,6 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
       className="relative overflow-hidden h-[calc(100vh-64px)] md:h-[640px]"
       style={{ background: 'linear-gradient(135deg, #102037 0%, #2A435A 100%)' }}
     >
-      {/* GRIZZLIES watermark — MOBILE: centered, behind the head area */}
-      <div
-        className="md:hidden pointer-events-none select-none absolute z-[5] inset-x-0 text-center"
-        aria-hidden="true"
-        style={{ top: '42%' }}
-      >
-        <span
-          className={`${hnkani.className} inline-block uppercase leading-none tracking-tighter whitespace-nowrap`}
-          style={{ fontSize: 'clamp(60px, 18vw, 96px)', ...GRADIENT_TEXT_STYLE }}
-        >
-          GRIZZLIES
-        </span>
-      </div>
-
       {/* GRIZZLIES watermark — DESKTOP: original position */}
       <div
         className="hidden md:block pointer-events-none select-none absolute z-[5]"
@@ -119,7 +105,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
       <div
         className="md:hidden pointer-events-none absolute z-[3] opacity-[0.08]"
         aria-hidden="true"
-        style={{ top: '62%', left: '-8%', width: '80vw', transform: 'translateY(-50%)' }}
+        style={{ top: '54%', left: '50%', width: '95vw', transform: 'translate(-50%, -50%)' }}
       >
         <img src="/grizzlies-bear.png" alt="" className="w-full" />
       </div>
