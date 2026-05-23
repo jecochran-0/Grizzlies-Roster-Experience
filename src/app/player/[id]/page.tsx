@@ -10,6 +10,7 @@ import AwardsBadges from '@/components/player/AwardsBadges'
 import PlayerBio from '@/components/player/PlayerBio'
 import MorePlayers from '@/components/player/MorePlayers'
 import RecentGames from '@/components/player/RecentGames'
+import PlayerHighlights from '@/components/player/PlayerHighlights'
 import FanEngagement from '@/components/player/FanEngagement'
 import { fetchPlayer, fetchRoster } from '@/lib/api'
 import type { PlayerDetail, RosterPlayer } from '@/lib/types'
@@ -63,6 +64,7 @@ export default function PlayerPage() {
           </div>
           <MorePlayers players={relatedPlayers} />
           <RecentGames player={player} />
+          <PlayerHighlights player={player} />
           <FanEngagement player={player} />
         </>
       )}

@@ -115,9 +115,18 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
         </span>
       </div>
 
-      {/* Bear watermark */}
+      {/* Bear watermark — MOBILE */}
       <div
-        className="pointer-events-none absolute z-[3] opacity-[0.07]"
+        className="md:hidden pointer-events-none absolute z-[3] opacity-[0.08]"
+        aria-hidden="true"
+        style={{ top: '62%', left: '-8%', width: '80vw', transform: 'translateY(-50%)' }}
+      >
+        <img src="/grizzlies-bear.png" alt="" className="w-full" />
+      </div>
+
+      {/* Bear watermark — DESKTOP */}
+      <div
+        className="hidden md:block pointer-events-none absolute z-[3] opacity-[0.07]"
         aria-hidden="true"
         style={{ top: '50%', left: '16%', width: '38vw', maxWidth: '480px', transform: 'translateY(-50%)' }}
       >
