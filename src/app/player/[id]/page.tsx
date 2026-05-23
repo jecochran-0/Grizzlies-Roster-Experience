@@ -27,7 +27,14 @@ export default function PlayerPage() {
     Promise.all([fetchPlayer(id), fetchRoster()])
       .then(([p, roster]) => {
         setPlayer(p)
-        setRelatedPlayers(roster.filter((r) => r.id !== p.pid).slice(0, 3))
+        const others = roster.filter((r) => r.id !== p.pid)
+        const top = (key: keyof typeof others[0]['stats']['season']) =>
+          [...others].sort((a, b) => b.stats.season[key] - a.stats.season[key]).slice(0, 5)
+        const pool = [...new Map(
+          [...top('ppg'), ...top('rpg'), ...top('apg')].map((r) => [r.id, r])
+        ).values()]
+        const picked = pool.sort(() => Math.random() - 0.5).slice(0, 3)
+        setRelatedPlayers(picked)
       })
       .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false))
