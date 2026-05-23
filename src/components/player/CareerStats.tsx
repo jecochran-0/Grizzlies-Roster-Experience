@@ -15,7 +15,7 @@ function BarChartIcon() {
 function StatItem({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <span className="text-6xl font-black leading-none text-white">
+      <span className="text-4xl font-black leading-none text-white md:text-6xl">
         {value.toFixed(1)}
       </span>
       <span className="text-xs font-bold uppercase tracking-widest text-steel">

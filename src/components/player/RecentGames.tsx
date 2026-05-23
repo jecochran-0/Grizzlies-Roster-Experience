@@ -26,15 +26,15 @@ function GameRow({ game }: { game: GameLog }) {
   const isWin = game.WL === 'W'
   return (
     <tr className="border-b border-white/10">
-      <td className="py-3 pr-4 text-sm text-white">
-        <span className="block font-semibold">{formatDate(game.GAME_DATE)}</span>
-        <span className="block text-xs text-steel">{formatMatchup(game.MATCHUP)}</span>
+      <td className="py-4 pr-4">
+        <span className="block text-base font-black text-white">{formatDate(game.GAME_DATE)}</span>
+        <span className="block text-xs font-semibold uppercase tracking-wide text-white/50">{formatMatchup(game.MATCHUP)}</span>
       </td>
-      <td className="px-4 py-3 text-sm text-white">{game.PTS} PTS</td>
-      <td className="px-4 py-3 text-sm text-white">{game.REB} REB</td>
-      <td className="px-4 py-3 text-sm text-white">{game.AST} AST</td>
-      <td className="py-3 pl-4 text-sm font-bold">
-        <span className={isWin ? 'text-beale' : 'text-steel'}>
+      <td className="px-3 py-4 text-base font-bold text-white md:px-5">{game.PTS}</td>
+      <td className="px-3 py-4 text-base font-bold text-white md:px-5">{game.REB}</td>
+      <td className="px-3 py-4 text-base font-bold text-white md:px-5">{game.AST}</td>
+      <td className="py-4 pl-3 md:pl-5">
+        <span className={`text-base font-black ${isWin ? 'text-gold' : 'text-white/40'}`}>
           {game.WL}
         </span>
       </td>
@@ -53,23 +53,23 @@ export default function RecentGames({ player }: RecentGamesProps) {
         <h2 className="mb-8 text-3xl font-black uppercase text-white">
           Last 5 Games
         </h2>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[480px]">
+        <div className="overflow-x-hidden">
+          <table className="w-full">
             <thead>
               <tr className="border-b border-white/20">
-                <th className="pb-3 pr-4 text-left text-xs font-black uppercase tracking-widest text-steel">
+                <th className="pb-3 pr-4 text-left text-[10px] font-black uppercase tracking-widest text-white/50">
                   Game
                 </th>
-                <th className="px-4 pb-3 text-left text-xs font-black uppercase tracking-widest text-steel">
-                  Points
+                <th className="px-3 pb-3 text-left text-[10px] font-black uppercase tracking-widest text-white/50 md:px-5">
+                  PTS
                 </th>
-                <th className="px-4 pb-3 text-left text-xs font-black uppercase tracking-widest text-steel">
-                  Rebounds
+                <th className="px-3 pb-3 text-left text-[10px] font-black uppercase tracking-widest text-white/50 md:px-5">
+                  REB
                 </th>
-                <th className="px-4 pb-3 text-left text-xs font-black uppercase tracking-widest text-steel">
-                  Assists
+                <th className="px-3 pb-3 text-left text-[10px] font-black uppercase tracking-widest text-white/50 md:px-5">
+                  AST
                 </th>
-                <th className="pb-3 pl-4 text-left text-xs font-black uppercase tracking-widest text-steel">
+                <th className="pb-3 pl-3 text-left text-[10px] font-black uppercase tracking-widest text-white/50 md:pl-5">
                   W/L
                 </th>
               </tr>

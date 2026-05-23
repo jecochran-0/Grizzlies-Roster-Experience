@@ -36,7 +36,7 @@ export default function PlayerPage() {
     <>
     <LoadingScreen show={loading} />
     <div
-      className="min-h-screen"
+      className="min-h-screen overflow-x-hidden"
       style={{ background: 'linear-gradient(135deg, #102037 0%, #2A435A 100%)' }}
     >
       <Navbar />
