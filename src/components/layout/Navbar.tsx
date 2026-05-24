@@ -99,7 +99,7 @@ export default function Navbar() {
             <li key={label}>
               <a
                 href="#"
-                className="flex items-center gap-1 text-sm font-semibold uppercase tracking-wider text-white/80 transition-colors hover:text-white"
+                className="flex items-center gap-1 text-sm font-semibold uppercase tracking-wider text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded"
               >
                 {label}
                 {label === 'Shop' && (
@@ -124,7 +124,7 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="text-white md:hidden"
+          className="text-white md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded"
           onClick={() => setMobileOpen((o) => !o)}
           aria-expanded={mobileOpen}
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}

@@ -4,6 +4,7 @@ import type { RosterPlayer } from '@/lib/types'
 
 interface PlayerCardProps {
   player: RosterPlayer
+  featured?: boolean
 }
 
 function StatCell({ value, label }: { value: number; label: string }) {
@@ -15,16 +16,32 @@ function StatCell({ value, label }: { value: number; label: string }) {
   )
 }
 
-export default function PlayerCard({ player }: PlayerCardProps) {
+export default function PlayerCard({ player, featured = false }: PlayerCardProps) {
   const { id, number, firstName, lastName, displayName, position, stats } = player
   const { ppg, rpg, apg } = stats.season
 
   return (
     <article
-      className="overflow-hidden transition-transform duration-200 hover:-translate-y-1"
+      className="group overflow-hidden"
       style={{
-        border: '1px solid rgba(255, 255, 255, 0.15)',
+        border: featured ? '1px solid rgba(245,177,18,0.55)' : '1px solid rgba(255,255,255,0.15)',
         borderRadius: '12px',
+        boxShadow: featured ? '0 0 28px rgba(245,177,18,0.12)' : undefined,
+        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease',
+      }}
+      onMouseEnter={e => {
+        const el = e.currentTarget
+        el.style.transform = 'translateY(-8px)'
+        el.style.boxShadow = featured
+          ? '0 20px 40px rgba(0,0,0,0.5), 0 0 32px rgba(245,177,18,0.18)'
+          : '0 24px 48px rgba(0,0,0,0.5)'
+        el.style.borderColor = featured ? 'rgba(245,177,18,0.8)' : 'rgba(255,255,255,0.32)'
+      }}
+      onMouseLeave={e => {
+        const el = e.currentTarget
+        el.style.transform = ''
+        el.style.boxShadow = featured ? '0 0 28px rgba(245,177,18,0.12)' : ''
+        el.style.borderColor = featured ? 'rgba(245,177,18,0.55)' : 'rgba(255,255,255,0.15)'
       }}
     >
       {/* Gradient covers header + image only */}
@@ -52,10 +69,15 @@ export default function PlayerCard({ player }: PlayerCardProps) {
         </div>
 
         {/* Position — own row below header */}
-        <div className="px-4 pb-1 pt-1">
+        <div className="flex items-center gap-2 px-4 pb-1 pt-1">
           <span className="text-[11px] font-semibold uppercase tracking-widest text-steel">
             {position}
           </span>
+          {featured && (
+            <span className="rounded-full bg-gold px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-midnight">
+              Top Scorer
+            </span>
+          )}
         </div>
 
         {/* Headshot */}
@@ -74,7 +96,7 @@ export default function PlayerCard({ player }: PlayerCardProps) {
       <div className="px-4 pb-4">
         <Link
           href={`/player/${id}`}
-          className="block w-full rounded-full bg-white py-2.5 text-center text-sm font-bold text-midnight transition-colors hover:bg-smoke"
+          className="block w-full rounded-full bg-white py-2.5 text-center text-sm font-bold text-midnight transition-all duration-200 hover:bg-smoke hover:tracking-wide active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
         >
           {displayName} Bio
         </Link>

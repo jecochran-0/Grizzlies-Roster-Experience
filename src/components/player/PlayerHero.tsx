@@ -2,12 +2,19 @@ import Link from 'next/link'
 import Image from 'next/image'
 import localFont from 'next/font/local'
 import type { PlayerDetail } from '@/lib/types'
-import { getJerseyUrl } from '@/lib/utils'
+import { getJerseyUrl, getNbaStatsUrl } from '@/lib/utils'
 
 const hnkani = localFont({ src: '../../fonts/HNkani.ttf' })
 
+interface PlayerNav {
+  id: number
+  name: string
+}
+
 interface PlayerHeroProps {
   player: PlayerDetail
+  prev?: PlayerNav | null
+  next?: PlayerNav | null
 }
 
 function InfoBlock({ label, value }: { label: string; value: string }) {
@@ -52,6 +59,50 @@ function BagIcon() {
   )
 }
 
+function ChevronLeft() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+      <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" />
+    </svg>
+  )
+}
+
+function ChevronRight() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+      <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
+    </svg>
+  )
+}
+
+function PlayerNavArrows({ prev, next }: { prev?: PlayerNav | null; next?: PlayerNav | null }) {
+  if (!prev && !next) return null
+  return (
+    <div className="flex items-center gap-3" aria-label="Navigate between players">
+      {prev && (
+        <Link
+          href={`/player/${prev.id}`}
+          aria-label={`Previous player: ${prev.name}`}
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/50 px-3 py-1.5 md:px-4 md:py-2 text-xs font-bold text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+        >
+          <ChevronLeft />
+          <span className="hidden md:inline">{prev.name}</span>
+        </Link>
+      )}
+      {next && (
+        <Link
+          href={`/player/${next.id}`}
+          aria-label={`Next player: ${next.name}`}
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/50 px-3 py-1.5 md:px-4 md:py-2 text-xs font-bold text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+        >
+          <span className="hidden md:inline">{next.name}</span>
+          <ChevronRight />
+        </Link>
+      )}
+    </div>
+  )
+}
+
 function BackArrow() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
@@ -77,10 +128,11 @@ const FADE_STYLE = {
   pointerEvents: 'none' as const,
 }
 
-export default function PlayerHero({ player }: PlayerHeroProps) {
+export default function PlayerHero({ player, prev, next }: PlayerHeroProps) {
   const yearsInNba = player.info.SEASON_EXP
   const headshotUrl = `https://cdn.nba.com/headshots/nba/latest/1040x760/${player.pid}.png`
   const jerseyUrl = getJerseyUrl(player.name)
+  const statsUrl = getNbaStatsUrl(player.pid, player.name)
 
   return (
     <section
@@ -121,31 +173,33 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
 
       {/* ── MOBILE LAYOUT ── */}
       <div className="md:hidden relative z-10 flex flex-col h-full">
-        <div className="px-5 pt-3">
+        {/* Top bar: back link + prev/next */}
+        <div className="flex items-center justify-between px-5 pt-3">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors hover:text-white"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-full"
           >
             <BackArrow />
             Back to Roster
           </Link>
+          <PlayerNavArrows prev={prev} next={next} />
         </div>
 
-        {/* Top two-column block */}
-        <div className="mt-2 flex items-start gap-3 px-5">
+        {/* Two-column block */}
+        <div className="mt-3 flex items-start gap-3 px-5">
           {/* Left: jersey / name / team */}
           <div className="flex-1 min-w-0">
             <span
               className="block font-black leading-none text-gold"
-              style={{ fontSize: 'clamp(2.5rem, 11vw, 3.25rem)' }}
+              style={{ fontSize: 'clamp(2.25rem, 10vw, 3rem)' }}
             >
               {player.jerseyNumber || '—'}
             </span>
             <div className="mt-0.5">
-              <p className="text-sm font-light leading-snug text-white">{player.firstName}</p>
+              <p className="text-xs font-light leading-snug text-white">{player.firstName}</p>
               <p
                 className="font-black leading-tight text-white"
-                style={{ fontSize: 'clamp(1.25rem, 5.5vw, 1.75rem)' }}
+                style={{ fontSize: 'clamp(1.1rem, 5vw, 1.5rem)' }}
               >
                 {player.lastName}
               </p>
@@ -154,7 +208,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
               <img
                 src="https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg"
                 alt="Memphis Grizzlies"
-                className="h-7 w-7 shrink-0"
+                className="h-6 w-6 shrink-0"
               />
               <span className="text-[10px] font-black uppercase leading-tight tracking-wide text-white">
                 {player.teamCity}<br />{player.teamName}
@@ -181,7 +235,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
                   { value: player.rpg, label: 'RPG' },
                 ].map(({ value, label }) => (
                   <div key={label} className="flex flex-col items-center">
-                    <span className="text-lg font-black leading-none text-white">
+                    <span className="text-base font-black leading-none text-white">
                       {(value ?? 0).toFixed(1)}
                     </span>
                     <span className="mt-0.5 text-[8px] font-bold uppercase tracking-widest text-steel">
@@ -192,16 +246,21 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
               </div>
             </div>
 
-            <button className="flex w-full items-center justify-center gap-1.5 rounded-full bg-white py-2 text-xs font-bold text-midnight transition-colors hover:bg-smoke">
+            <a
+              href={statsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center gap-1.5 rounded-full bg-white py-1.5 text-xs font-bold text-midnight transition-colors hover:bg-smoke"
+            >
               <BarChartIcon />
               See Full Stats
-            </button>
+            </a>
 
             <a
               href={jerseyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-1.5 rounded-full py-2 text-xs font-bold text-midnight transition-opacity hover:opacity-90"
+              className="flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 text-xs font-bold text-midnight transition-colors hover:opacity-90"
               style={{ backgroundColor: '#F5B112' }}
             >
               <BagIcon />
@@ -210,18 +269,8 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
           </div>
         </div>
 
-        {/* Position / Years / From */}
-        <div className="mt-3 grid grid-cols-3 gap-2 px-5">
-          <InfoBlock label="Position" value={player.position} />
-          <InfoBlock
-            label="Years in NBA"
-            value={`${yearsInNba} ${yearsInNba === 1 ? 'Year' : 'Years'}`}
-          />
-          <InfoBlock label="From" value={player.country} />
-        </div>
-
-        {/* Headshot: flex-1 fills exactly the remaining space, no overlap */}
-        <div className="relative flex-1 mt-4">
+        {/* Headshot fills remaining space */}
+        <div className="relative flex-1 mt-3">
           <Image
             src={headshotUrl}
             alt={player.name}
@@ -239,7 +288,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
         <div className="shrink-0 pt-5 pb-3">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors hover:text-white"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-full"
           >
             <BackArrow />
             Back to Roster
@@ -290,6 +339,9 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
                 {player.teamCity}<br />{player.teamName}
               </span>
             </div>
+            <div className="mt-5">
+              <PlayerNavArrows prev={prev} next={next} />
+            </div>
           </div>
 
           {/* Right column */}
@@ -304,7 +356,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
             </div>
 
             <div
-              className="mb-4 px-5 py-4"
+              className="px-5 py-4"
               style={{
                 border: '1px solid rgba(255,255,255,0.18)',
                 borderRadius: '10px',
@@ -320,17 +372,21 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
                 <StatBlock value={player.rpg} label="RPG" />
               </div>
             </div>
-
-            <div className="flex flex-col gap-3">
-              <button className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-bold text-midnight transition-colors hover:bg-smoke">
+            <div className="mt-4 flex flex-col gap-3">
+              <a
+                href={statsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-2.5 text-sm font-bold text-midnight transition-colors hover:bg-smoke"
+              >
                 <BarChartIcon />
                 See Full Stats
-              </button>
+              </a>
               <a
                 href={jerseyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-bold text-midnight transition-opacity hover:opacity-90"
+                className="flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-bold text-midnight transition-colors hover:opacity-90"
                 style={{ backgroundColor: '#F5B112' }}
               >
                 <BagIcon />

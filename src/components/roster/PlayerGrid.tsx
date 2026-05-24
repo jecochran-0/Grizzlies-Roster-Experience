@@ -60,10 +60,14 @@ export default function PlayerGrid({ players, loading = false }: PlayerGridProps
     )
   }
 
+  const topScorerId = players.reduce((best, p) =>
+    (p.stats?.season?.ppg ?? 0) > (best.stats?.season?.ppg ?? 0) ? p : best
+  , players[0])?.id
+
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
       {players.map((player) => (
-        <PlayerCard key={player.id} player={player} />
+        <PlayerCard key={player.id} player={player} featured={player.id === topScorerId} />
       ))}
     </div>
   )

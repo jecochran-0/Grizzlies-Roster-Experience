@@ -32,7 +32,7 @@ export default function SortControls({
           <button
             key={key}
             onClick={() => onStatChange(key)}
-            className={`rounded-full border px-5 py-1.5 text-sm font-semibold transition-colors ${
+            className={`rounded-full border px-5 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ${
               sortStat === key
                 ? 'border-white bg-white text-midnight'
                 : 'border-white/50 bg-transparent text-white hover:border-white'
@@ -46,7 +46,7 @@ export default function SortControls({
         <select
           value={sortOrder}
           onChange={(e) => onOrderChange(e.target.value as SortOrder)}
-          className="cursor-pointer appearance-none rounded-full border border-white/50 bg-midnight py-1.5 pl-4 pr-10 text-sm font-semibold text-white focus:outline-none"
+          className="cursor-pointer appearance-none rounded-full border border-white/50 bg-midnight py-1.5 pl-4 pr-10 text-sm font-semibold text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
         >
           <option value="highest">Highest to Lowest</option>
           <option value="lowest">Lowest to Highest</option>

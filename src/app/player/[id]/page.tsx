@@ -19,6 +19,8 @@ export default function PlayerPage() {
   const { id } = useParams<{ id: string }>()
   const [player, setPlayer] = useState<PlayerDetail | null>(null)
   const [relatedPlayers, setRelatedPlayers] = useState<RosterPlayer[]>([])
+  const [prevPlayer, setPrevPlayer] = useState<{ id: number; name: string } | null>(null)
+  const [nextPlayer, setNextPlayer] = useState<{ id: number; name: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -26,6 +28,9 @@ export default function PlayerPage() {
     Promise.all([fetchPlayer(id), fetchRoster()])
       .then(([p, roster]) => {
         setPlayer(p)
+        const idx = roster.findIndex((r) => r.id === p.pid)
+        setPrevPlayer(idx > 0 ? { id: roster[idx - 1].id, name: roster[idx - 1].lastName } : null)
+        setNextPlayer(idx < roster.length - 1 ? { id: roster[idx + 1].id, name: roster[idx + 1].lastName } : null)
         const others = roster.filter((r) => r.id !== p.pid)
         const top = (key: keyof typeof others[0]['stats']['season']) =>
           [...others].sort((a, b) => (b.stats?.season?.[key] ?? 0) - (a.stats?.season?.[key] ?? 0)).slice(0, 5)
@@ -62,7 +67,7 @@ export default function PlayerPage() {
 
       {player && (
         <>
-          <PlayerHero player={player} />
+          <PlayerHero player={player} prev={prevPlayer} next={nextPlayer} />
           <div style={{ background: '#1A2F4E' }} className="pt-12">
             <AwardsBadges player={player} />
             <PlayerBio player={player} />
