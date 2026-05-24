@@ -4,7 +4,7 @@ export function getHeadshotUrl(playerId: number | string): string {
 
 export function getJerseyUrl(playerName: string): string {
   const query = encodeURIComponent(`${playerName} jersey`)
-  return `https://store.nba.com/memphis-grizzlies/?query=${query}`
+  return `https://www.fanatics.com/search#q=${query}&start=0`
 }
 
 export function getTicketsUrl(): string {
