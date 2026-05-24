@@ -259,7 +259,7 @@ function PlayerHeroDesktop({ player, prev, next, headshotUrl, jerseyUrl, statsUr
       </div>
 
       <div className="relative flex-1">
-        <div className="absolute z-[10]" style={{ left: '14%', right: '31%', top: 0, bottom: 0 }}>
+        <div className="absolute z-[10] pointer-events-none" style={{ left: '14%', right: '31%', top: 0, bottom: 0 }}>
           <Image
             src={headshotUrl}
             alt={player.name}

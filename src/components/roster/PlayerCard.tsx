@@ -34,12 +34,14 @@ export default function PlayerCard({ player, featured = false }: PlayerCardProps
         ['--hover-border' as string]: featured ? 'rgba(245,177,18,0.8)' : 'rgba(255,255,255,0.32)',
       }}
       onMouseEnter={e => {
+        if (!window.matchMedia('(hover: hover)').matches) return
         const el = e.currentTarget as HTMLElement
         el.style.transform = 'translateY(-8px)'
         el.style.boxShadow = el.style.getPropertyValue('--hover-shadow')
         el.style.borderColor = el.style.getPropertyValue('--hover-border')
       }}
       onMouseLeave={e => {
+        if (!window.matchMedia('(hover: hover)').matches) return
         const el = e.currentTarget as HTMLElement
         el.style.transform = ''
         el.style.boxShadow = featured ? '0 0 28px rgba(245,177,18,0.12)' : ''
