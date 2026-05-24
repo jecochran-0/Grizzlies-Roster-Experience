@@ -30,12 +30,12 @@ function GameRow({ game }: { game: GameLog }) {
         <span className="block text-base font-black text-white">{formatDate(game.GAME_DATE)}</span>
         <span className="block text-xs font-semibold uppercase tracking-wide text-white/50">{formatMatchup(game.MATCHUP)}</span>
       </td>
-      <td className="px-3 py-4 text-base font-bold text-white md:px-5">{game.PTS}</td>
-      <td className="px-3 py-4 text-base font-bold text-white md:px-5">{game.REB}</td>
-      <td className="px-3 py-4 text-base font-bold text-white md:px-5">{game.AST}</td>
+      <td className="px-3 py-4 text-base font-bold text-white md:px-5">{game.PTS ?? '—'}</td>
+      <td className="px-3 py-4 text-base font-bold text-white md:px-5">{game.REB ?? '—'}</td>
+      <td className="px-3 py-4 text-base font-bold text-white md:px-5">{game.AST ?? '—'}</td>
       <td className="py-4 pl-3 md:pl-5">
         <span className={`text-base font-black ${isWin ? 'text-gold' : 'text-white/40'}`}>
-          {game.WL}
+          {game.WL || '—'}
         </span>
       </td>
     </tr>

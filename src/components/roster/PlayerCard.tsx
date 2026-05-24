@@ -9,7 +9,7 @@ interface PlayerCardProps {
 function StatCell({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="text-2xl font-bold text-white">{value.toFixed(1)}</span>
+      <span className="text-2xl font-bold text-white">{(value ?? 0).toFixed(1)}</span>
       <span className="text-xs font-semibold uppercase tracking-widest text-steel">{label}</span>
     </div>
   )

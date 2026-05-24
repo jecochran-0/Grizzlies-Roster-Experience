@@ -43,7 +43,7 @@ function groupAwards(awards: Award[]): string[] {
 }
 
 export default function AwardsBadges({ player }: AwardsBadgesProps) {
-  const grouped = groupAwards(player.awards)
+  const grouped = groupAwards(player.awards ?? [])
 
   if (grouped.length === 0) return null
 

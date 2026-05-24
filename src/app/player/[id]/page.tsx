@@ -28,7 +28,7 @@ export default function PlayerPage() {
         setPlayer(p)
         const others = roster.filter((r) => r.id !== p.pid)
         const top = (key: keyof typeof others[0]['stats']['season']) =>
-          [...others].sort((a, b) => b.stats.season[key] - a.stats.season[key]).slice(0, 5)
+          [...others].sort((a, b) => (b.stats?.season?.[key] ?? 0) - (a.stats?.season?.[key] ?? 0)).slice(0, 5)
         const pool = [...new Map(
           [...top('ppg'), ...top('rpg'), ...top('apg')].map((r) => [r.id, r])
         ).values()]

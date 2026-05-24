@@ -34,7 +34,7 @@ function VideoCard({ video }: { video: Video }) {
     video.videoAssets?.['960']?.thumbnail ||
     video.videoAssets?.['320']?.thumbnail
 
-  const duration = video.videoDurationSeconds
+  const duration = video.videoDurationSeconds ?? 0
 
   return (
     <article

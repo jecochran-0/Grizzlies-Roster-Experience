@@ -27,7 +27,7 @@ function StatBlock({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex items-baseline gap-1.5">
       <span className="text-4xl font-black leading-none text-white">
-        {value.toFixed(1)}
+        {(value ?? 0).toFixed(1)}
       </span>
       <span className="text-xs font-bold uppercase tracking-widest text-steel">
         {label}
@@ -182,7 +182,7 @@ export default function PlayerHero({ player }: PlayerHeroProps) {
                 ].map(({ value, label }) => (
                   <div key={label} className="flex flex-col items-center">
                     <span className="text-lg font-black leading-none text-white">
-                      {value.toFixed(1)}
+                      {(value ?? 0).toFixed(1)}
                     </span>
                     <span className="mt-0.5 text-[8px] font-bold uppercase tracking-widest text-steel">
                       {label}

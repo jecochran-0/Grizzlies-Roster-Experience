@@ -46,7 +46,7 @@ export default function FanEngagement({ player }: FanEngagementProps) {
             style={{ backgroundColor: '#F5B112' }}
           >
             <BagIcon />
-            Get a #{player.jerseyNumber} Jersey
+            Get a {player.jerseyNumber ? `#${player.jerseyNumber} ` : ''}Jersey
           </a>
         </div>
       </div>
