@@ -5,7 +5,6 @@ import { useParams } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import PlayerHero from '@/components/player/PlayerHero'
-import CareerStats from '@/components/player/CareerStats'
 import AwardsBadges from '@/components/player/AwardsBadges'
 import PlayerBio from '@/components/player/PlayerBio'
 import MorePlayers from '@/components/player/MorePlayers'
@@ -64,15 +63,14 @@ export default function PlayerPage() {
       {player && (
         <>
           <PlayerHero player={player} />
-          <div style={{ background: '#1A2F4E' }}>
-            <CareerStats player={player} />
+          <div style={{ background: '#1A2F4E' }} className="pt-12">
             <AwardsBadges player={player} />
             <PlayerBio player={player} />
           </div>
-          <MorePlayers players={relatedPlayers} />
           <RecentGames player={player} />
           <PlayerHighlights player={player} />
           <FanEngagement player={player} />
+          <MorePlayers players={relatedPlayers} />
         </>
       )}
 
