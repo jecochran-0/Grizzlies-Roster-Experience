@@ -17,6 +17,15 @@ interface PlayerHeroProps {
   next?: PlayerNav | null
 }
 
+interface HeroLayoutProps extends PlayerHeroProps {
+  headshotUrl: string
+  jerseyUrl: string
+  statsUrl: string
+  yearsInNba: number
+}
+
+// ── Primitive components ──────────────────────────────────────────────────────
+
 function InfoBlock({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-1 min-w-0">
@@ -75,7 +84,15 @@ function ChevronRight() {
   )
 }
 
-function PlayerNavArrows({ prev, next }: { prev?: PlayerNav | null; next?: PlayerNav | null }) {
+function BackArrow() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+    </svg>
+  )
+}
+
+function PlayerNavArrows({ prev, next }: Pick<PlayerHeroProps, 'prev' | 'next'>) {
   if (!prev && !next) return null
   return (
     <div className="flex items-center gap-3" aria-label="Navigate between players">
@@ -103,13 +120,7 @@ function PlayerNavArrows({ prev, next }: { prev?: PlayerNav | null; next?: Playe
   )
 }
 
-function BackArrow() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-    </svg>
-  )
-}
+// ── Constants ─────────────────────────────────────────────────────────────────
 
 const GRADIENT_TEXT_STYLE = {
   backgroundImage: 'linear-gradient(180deg, rgba(197,158,88,0.85) 0%, rgba(28,48,88,0.18) 100%)',
@@ -128,18 +139,234 @@ const FADE_STYLE = {
   pointerEvents: 'none' as const,
 }
 
+// ── Layout sub-components ─────────────────────────────────────────────────────
+
+function PlayerHeroMobile({ player, prev, next, headshotUrl, jerseyUrl, statsUrl }: HeroLayoutProps) {
+  return (
+    <div className="md:hidden relative z-10 flex flex-col h-full">
+      <div className="flex items-center justify-between px-5 pt-3">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-full"
+        >
+          <BackArrow />
+          Back to Roster
+        </Link>
+        <PlayerNavArrows prev={prev} next={next} />
+      </div>
+
+      <div className="mt-3 flex items-start gap-3 px-5">
+        <div className="flex-1 min-w-0">
+          <span
+            className="block font-black leading-none text-gold"
+            style={{ fontSize: 'clamp(2.25rem, 10vw, 3rem)' }}
+          >
+            {player.jerseyNumber || '—'}
+          </span>
+          <div className="mt-0.5">
+            <p className="text-xs font-light leading-snug text-white">{player.firstName}</p>
+            <p className="font-black leading-tight text-white" style={{ fontSize: 'clamp(1.1rem, 5vw, 1.5rem)' }}>
+              {player.lastName}
+            </p>
+          </div>
+          <div className="mt-2 flex items-center gap-1.5">
+            <img
+              src="https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg"
+              alt="Memphis Grizzlies"
+              className="h-6 w-6 shrink-0"
+            />
+            <span className="text-[10px] font-black uppercase leading-tight tracking-wide text-white">
+              {player.teamCity}<br />{player.teamName}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex-1 min-w-0 flex flex-col gap-2">
+          <div
+            className="rounded-xl px-3 py-2"
+            style={{ border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.06)' }}
+          >
+            <p className="mb-1 text-[8px] font-black uppercase tracking-widest text-gold">
+              Current Season Stats
+            </p>
+            <div className="flex items-end justify-between">
+              {[
+                { value: player.ppg, label: 'PPG' },
+                { value: player.apg, label: 'APG' },
+                { value: player.rpg, label: 'RPG' },
+              ].map(({ value, label }) => (
+                <div key={label} className="flex flex-col items-center">
+                  <span className="text-base font-black leading-none text-white">
+                    {(value ?? 0).toFixed(1)}
+                  </span>
+                  <span className="mt-0.5 text-[8px] font-bold uppercase tracking-widest text-steel">
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <a
+            href={statsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-1.5 rounded-full bg-white py-1.5 text-xs font-bold text-midnight transition-colors hover:bg-smoke"
+          >
+            <BarChartIcon />
+            See Full Stats
+          </a>
+
+          <a
+            href={jerseyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 text-xs font-bold text-midnight transition-colors hover:opacity-90"
+            style={{ backgroundColor: '#F5B112' }}
+          >
+            <BagIcon />
+            Get #{player.jerseyNumber} Jersey
+          </a>
+        </div>
+      </div>
+
+      <div className="relative flex-1 mt-3">
+        <Image
+          src={headshotUrl}
+          alt={player.name}
+          fill
+          sizes="100vw"
+          className="object-cover object-top"
+          priority
+        />
+        <div style={FADE_STYLE} />
+      </div>
+    </div>
+  )
+}
+
+function PlayerHeroDesktop({ player, prev, next, headshotUrl, jerseyUrl, statsUrl, yearsInNba }: HeroLayoutProps) {
+  return (
+    <div className="hidden md:flex h-full mx-auto max-w-7xl flex-col px-6">
+      <div className="shrink-0 pt-5 pb-3">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-full"
+        >
+          <BackArrow />
+          Back to Roster
+        </Link>
+      </div>
+
+      <div className="relative flex-1">
+        <div className="absolute z-[10]" style={{ left: '14%', right: '31%', top: 0, bottom: 0 }}>
+          <Image
+            src={headshotUrl}
+            alt={player.name}
+            fill
+            sizes="55vw"
+            className="object-contain object-bottom"
+            priority
+          />
+          <div style={FADE_STYLE} />
+        </div>
+
+        <div className="absolute left-0 z-[20]" style={{ top: '16%' }}>
+          <span className="block font-black leading-none text-gold" style={{ fontSize: 'clamp(5rem, 8vw, 8.5rem)' }}>
+            {player.jerseyNumber || '—'}
+          </span>
+          <div className="mt-1">
+            <p className="text-xl font-light leading-snug text-white">{player.firstName}</p>
+            <p className="font-black leading-none text-white" style={{ fontSize: 'clamp(2rem, 3.5vw, 3.5rem)' }}>
+              {player.lastName}
+            </p>
+          </div>
+          <div className="mt-4 flex items-center gap-3">
+            <img
+              src="https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg"
+              alt="Memphis Grizzlies"
+              className="h-14 w-14 shrink-0"
+            />
+            <span className="text-xs font-black uppercase leading-tight tracking-wide text-white">
+              {player.teamCity}<br />{player.teamName}
+            </span>
+          </div>
+          <div className="mt-5">
+            <PlayerNavArrows prev={prev} next={next} />
+          </div>
+        </div>
+
+        <div className="absolute right-0 z-[20]" style={{ top: '28%', width: '33%' }}>
+          <div className="mb-5 flex gap-8">
+            <InfoBlock label="Position" value={player.position} />
+            <InfoBlock
+              label="Years in NBA"
+              value={`${yearsInNba} ${yearsInNba === 1 ? 'Year' : 'Years'}`}
+            />
+            <InfoBlock label="From" value={player.country} />
+          </div>
+
+          <div
+            className="px-5 py-4"
+            style={{
+              border: '1px solid rgba(255,255,255,0.18)',
+              borderRadius: '10px',
+              background: 'rgba(255,255,255,0.06)',
+            }}
+          >
+            <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-gold">
+              Current Season Stats
+            </p>
+            <div className="flex items-center gap-7">
+              <StatBlock value={player.ppg} label="PPG" />
+              <StatBlock value={player.apg} label="APG" />
+              <StatBlock value={player.rpg} label="RPG" />
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-3">
+            <a
+              href={statsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-2.5 text-sm font-bold text-midnight transition-colors hover:bg-smoke"
+            >
+              <BarChartIcon />
+              See Full Stats
+            </a>
+            <a
+              href={jerseyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-bold text-midnight transition-colors hover:opacity-90"
+              style={{ backgroundColor: '#F5B112' }}
+            >
+              <BagIcon />
+              Get a #{player.jerseyNumber} Jersey
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Main export ───────────────────────────────────────────────────────────────
+
 export default function PlayerHero({ player, prev, next }: PlayerHeroProps) {
   const yearsInNba = player.info.SEASON_EXP
   const headshotUrl = `https://cdn.nba.com/headshots/nba/latest/1040x760/${player.pid}.png`
   const jerseyUrl = getJerseyUrl(player.name)
   const statsUrl = getNbaStatsUrl(player.pid, player.name)
 
+  const layoutProps: HeroLayoutProps = { player, prev, next, headshotUrl, jerseyUrl, statsUrl, yearsInNba }
+
   return (
     <section
       className="relative overflow-hidden h-[calc(100vh-64px)] md:h-[640px]"
       style={{ background: 'linear-gradient(135deg, #102037 0%, #2A435A 100%)' }}
     >
-      {/* GRIZZLIES watermark — DESKTOP: original position */}
+      {/* GRIZZLIES watermark — desktop only */}
       <div
         className="hidden md:block pointer-events-none select-none absolute z-[5]"
         aria-hidden="true"
@@ -153,7 +380,7 @@ export default function PlayerHero({ player, prev, next }: PlayerHeroProps) {
         </span>
       </div>
 
-      {/* Bear watermark — MOBILE */}
+      {/* Bear watermark — mobile */}
       <div
         className="md:hidden pointer-events-none absolute z-[3] opacity-[0.08]"
         aria-hidden="true"
@@ -162,7 +389,7 @@ export default function PlayerHero({ player, prev, next }: PlayerHeroProps) {
         <img src="/grizzlies-bear.png" alt="" className="w-full" />
       </div>
 
-      {/* Bear watermark — DESKTOP */}
+      {/* Bear watermark — desktop */}
       <div
         className="hidden md:block pointer-events-none absolute z-[3] opacity-[0.07]"
         aria-hidden="true"
@@ -171,231 +398,8 @@ export default function PlayerHero({ player, prev, next }: PlayerHeroProps) {
         <img src="/grizzlies-bear.png" alt="" className="w-full" />
       </div>
 
-      {/* ── MOBILE LAYOUT ── */}
-      <div className="md:hidden relative z-10 flex flex-col h-full">
-        {/* Top bar: back link + prev/next */}
-        <div className="flex items-center justify-between px-5 pt-3">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-full"
-          >
-            <BackArrow />
-            Back to Roster
-          </Link>
-          <PlayerNavArrows prev={prev} next={next} />
-        </div>
-
-        {/* Two-column block */}
-        <div className="mt-3 flex items-start gap-3 px-5">
-          {/* Left: jersey / name / team */}
-          <div className="flex-1 min-w-0">
-            <span
-              className="block font-black leading-none text-gold"
-              style={{ fontSize: 'clamp(2.25rem, 10vw, 3rem)' }}
-            >
-              {player.jerseyNumber || '—'}
-            </span>
-            <div className="mt-0.5">
-              <p className="text-xs font-light leading-snug text-white">{player.firstName}</p>
-              <p
-                className="font-black leading-tight text-white"
-                style={{ fontSize: 'clamp(1.1rem, 5vw, 1.5rem)' }}
-              >
-                {player.lastName}
-              </p>
-            </div>
-            <div className="mt-2 flex items-center gap-1.5">
-              <img
-                src="https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg"
-                alt="Memphis Grizzlies"
-                className="h-6 w-6 shrink-0"
-              />
-              <span className="text-[10px] font-black uppercase leading-tight tracking-wide text-white">
-                {player.teamCity}<br />{player.teamName}
-              </span>
-            </div>
-          </div>
-
-          {/* Right: stats + buttons */}
-          <div className="flex-1 min-w-0 flex flex-col gap-2">
-            <div
-              className="rounded-xl px-3 py-2"
-              style={{
-                border: '1px solid rgba(255,255,255,0.18)',
-                background: 'rgba(255,255,255,0.06)',
-              }}
-            >
-              <p className="mb-1 text-[8px] font-black uppercase tracking-widest text-gold">
-                Current Season Stats
-              </p>
-              <div className="flex items-end justify-between">
-                {[
-                  { value: player.ppg, label: 'PPG' },
-                  { value: player.apg, label: 'APG' },
-                  { value: player.rpg, label: 'RPG' },
-                ].map(({ value, label }) => (
-                  <div key={label} className="flex flex-col items-center">
-                    <span className="text-base font-black leading-none text-white">
-                      {(value ?? 0).toFixed(1)}
-                    </span>
-                    <span className="mt-0.5 text-[8px] font-bold uppercase tracking-widest text-steel">
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <a
-              href={statsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-1.5 rounded-full bg-white py-1.5 text-xs font-bold text-midnight transition-colors hover:bg-smoke"
-            >
-              <BarChartIcon />
-              See Full Stats
-            </a>
-
-            <a
-              href={jerseyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 text-xs font-bold text-midnight transition-colors hover:opacity-90"
-              style={{ backgroundColor: '#F5B112' }}
-            >
-              <BagIcon />
-              Get #{player.jerseyNumber} Jersey
-            </a>
-          </div>
-        </div>
-
-        {/* Headshot fills remaining space */}
-        <div className="relative flex-1 mt-3">
-          <Image
-            src={headshotUrl}
-            alt={player.name}
-            fill
-            sizes="100vw"
-            className="object-cover object-top"
-            priority
-          />
-          <div style={FADE_STYLE} />
-        </div>
-      </div>
-
-      {/* ── DESKTOP LAYOUT ── */}
-      <div className="hidden md:flex h-full mx-auto max-w-7xl flex-col px-6">
-        <div className="shrink-0 pt-5 pb-3">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-full"
-          >
-            <BackArrow />
-            Back to Roster
-          </Link>
-        </div>
-
-        <div className="relative flex-1">
-          {/* Player headshot — center zone */}
-          <div
-            className="absolute z-[10]"
-            style={{ left: '14%', right: '31%', top: 0, bottom: 0 }}
-          >
-            <Image
-              src={headshotUrl}
-              alt={player.name}
-              fill
-              sizes="55vw"
-              className="object-contain object-bottom"
-              priority
-            />
-            <div style={FADE_STYLE} />
-          </div>
-
-          {/* Left column */}
-          <div className="absolute left-0 z-[20]" style={{ top: '16%' }}>
-            <span
-              className="block font-black leading-none text-gold"
-              style={{ fontSize: 'clamp(5rem, 8vw, 8.5rem)' }}
-            >
-              {player.jerseyNumber || '—'}
-            </span>
-            <div className="mt-1">
-              <p className="text-xl font-light leading-snug text-white">{player.firstName}</p>
-              <p
-                className="font-black leading-none text-white"
-                style={{ fontSize: 'clamp(2rem, 3.5vw, 3.5rem)' }}
-              >
-                {player.lastName}
-              </p>
-            </div>
-            <div className="mt-4 flex items-center gap-3">
-              <img
-                src="https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg"
-                alt="Memphis Grizzlies"
-                className="h-14 w-14 shrink-0"
-              />
-              <span className="text-xs font-black uppercase leading-tight tracking-wide text-white">
-                {player.teamCity}<br />{player.teamName}
-              </span>
-            </div>
-            <div className="mt-5">
-              <PlayerNavArrows prev={prev} next={next} />
-            </div>
-          </div>
-
-          {/* Right column */}
-          <div className="absolute right-0 z-[20]" style={{ top: '28%', width: '33%' }}>
-            <div className="mb-5 flex gap-8">
-              <InfoBlock label="Position" value={player.position} />
-              <InfoBlock
-                label="Years in NBA"
-                value={`${yearsInNba} ${yearsInNba === 1 ? 'Year' : 'Years'}`}
-              />
-              <InfoBlock label="From" value={player.country} />
-            </div>
-
-            <div
-              className="px-5 py-4"
-              style={{
-                border: '1px solid rgba(255,255,255,0.18)',
-                borderRadius: '10px',
-                background: 'rgba(255,255,255,0.06)',
-              }}
-            >
-              <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-gold">
-                Current Season Stats
-              </p>
-              <div className="flex items-center gap-7">
-                <StatBlock value={player.ppg} label="PPG" />
-                <StatBlock value={player.apg} label="APG" />
-                <StatBlock value={player.rpg} label="RPG" />
-              </div>
-            </div>
-            <div className="mt-4 flex flex-col gap-3">
-              <a
-                href={statsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-white py-2.5 text-sm font-bold text-midnight transition-colors hover:bg-smoke"
-              >
-                <BarChartIcon />
-                See Full Stats
-              </a>
-              <a
-                href={jerseyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-bold text-midnight transition-colors hover:opacity-90"
-                style={{ backgroundColor: '#F5B112' }}
-              >
-                <BagIcon />
-                Get a #{player.jerseyNumber} Jersey
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PlayerHeroMobile {...layoutProps} />
+      <PlayerHeroDesktop {...layoutProps} />
     </section>
   )
 }
