@@ -39,8 +39,8 @@ export default function RosterPage() {
 
   return (
     <>
-    <LoadingScreen show={loading} />
-    <div
+      <LoadingScreen show={loading} />
+      <div
       className="relative min-h-screen overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #102037 0%, #2A435A 100%)' }}
     >
@@ -84,7 +84,7 @@ export default function RosterPage() {
           )}
         </main>
       </div>
-    </div>
+      </div>
     </>
   )
 }

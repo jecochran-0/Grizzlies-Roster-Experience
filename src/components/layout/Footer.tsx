@@ -109,7 +109,7 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-white/10 pt-6">
           <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-white/40">
-            <p>© 2024 NBA Media Ventures, LLC. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} NBA Media Ventures, LLC. All rights reserved.</p>
             <nav aria-label="Legal links">
               <ul className="flex flex-wrap gap-4">
                 {['Privacy Policy', 'Terms of Use', 'Cookie Policy', 'Accessibility', 'AdChoices'].map((item) => (

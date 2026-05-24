@@ -28,17 +28,19 @@ export default function PlayerCard({ player, featured = false }: PlayerCardProps
         borderRadius: '12px',
         boxShadow: featured ? '0 0 28px rgba(245,177,18,0.12)' : undefined,
         transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease',
+        ['--hover-shadow' as string]: featured
+          ? '0 20px 40px rgba(0,0,0,0.5), 0 0 32px rgba(245,177,18,0.18)'
+          : '0 24px 48px rgba(0,0,0,0.5)',
+        ['--hover-border' as string]: featured ? 'rgba(245,177,18,0.8)' : 'rgba(255,255,255,0.32)',
       }}
       onMouseEnter={e => {
-        const el = e.currentTarget
+        const el = e.currentTarget as HTMLElement
         el.style.transform = 'translateY(-8px)'
-        el.style.boxShadow = featured
-          ? '0 20px 40px rgba(0,0,0,0.5), 0 0 32px rgba(245,177,18,0.18)'
-          : '0 24px 48px rgba(0,0,0,0.5)'
-        el.style.borderColor = featured ? 'rgba(245,177,18,0.8)' : 'rgba(255,255,255,0.32)'
+        el.style.boxShadow = el.style.getPropertyValue('--hover-shadow')
+        el.style.borderColor = el.style.getPropertyValue('--hover-border')
       }}
       onMouseLeave={e => {
-        const el = e.currentTarget
+        const el = e.currentTarget as HTMLElement
         el.style.transform = ''
         el.style.boxShadow = featured ? '0 0 28px rgba(245,177,18,0.12)' : ''
         el.style.borderColor = featured ? 'rgba(245,177,18,0.55)' : 'rgba(255,255,255,0.15)'

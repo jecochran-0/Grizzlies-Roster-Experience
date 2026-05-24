@@ -53,7 +53,7 @@ export default function RecentGames({ player }: RecentGamesProps) {
         <h2 className="mb-8 text-3xl font-black uppercase text-white">
           Last 5 Games
         </h2>
-        <div className="overflow-x-hidden">
+        <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/20">
