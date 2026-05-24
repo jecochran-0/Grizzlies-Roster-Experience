@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Navbar from '@/components/layout/Navbar'
 import PageHero from '@/components/layout/PageHero'
 import SortControls, { type SortStat, type SortOrder } from '@/components/roster/SortControls'
@@ -16,12 +16,16 @@ export default function RosterPage() {
   const [sortStat, setSortStat] = useState<SortStat>('ppg')
   const [sortOrder, setSortOrder] = useState<SortOrder>('highest')
 
-  useEffect(() => {
+  const load = useCallback(() => {
+    setError(null)
+    setLoading(true)
     fetchRoster()
       .then(setPlayers)
       .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => { load() }, [load])
 
   const sorted = useMemo(
     () =>
@@ -69,14 +73,7 @@ export default function RosterPage() {
             <div className="py-16 text-center">
               <p className="text-steel">Failed to load roster. Please try again.</p>
               <button
-                onClick={() => {
-                  setError(null)
-                  setLoading(true)
-                  fetchRoster()
-                    .then(setPlayers)
-                    .catch((err: Error) => setError(err.message))
-                    .finally(() => setLoading(false))
-                }}
+                onClick={load}
                 className="mt-4 rounded-full border border-beale px-6 py-2 text-sm font-semibold text-white hover:bg-beale/20"
               >
                 Retry

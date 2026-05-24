@@ -53,12 +53,6 @@ export default function PlayerPage() {
     >
       <Navbar />
 
-      {loading && (
-        <div className="flex min-h-[600px] items-center justify-center">
-          <p className="text-steel">Loading...</p>
-        </div>
-      )}
-
       {error && (
         <div className="flex min-h-[600px] items-center justify-center">
           <p className="text-steel">Failed to load player.</p>

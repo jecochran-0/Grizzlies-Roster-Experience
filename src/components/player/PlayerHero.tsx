@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import localFont from 'next/font/local'
 import type { PlayerDetail } from '@/lib/types'
-import { getJerseyUrl, getNbaStatsUrl } from '@/lib/utils'
+import { getHeadshotUrl, getJerseyUrl, getNbaStatsUrl } from '@/lib/utils'
 
 const hnkani = localFont({ src: '../../fonts/HNkani.ttf' })
 
@@ -355,7 +355,7 @@ function PlayerHeroDesktop({ player, prev, next, headshotUrl, jerseyUrl, statsUr
 
 export default function PlayerHero({ player, prev, next }: PlayerHeroProps) {
   const yearsInNba = player.info.SEASON_EXP
-  const headshotUrl = `https://cdn.nba.com/headshots/nba/latest/1040x760/${player.pid}.png`
+  const headshotUrl = getHeadshotUrl(player.pid)
   const jerseyUrl = getJerseyUrl(player.name)
   const statsUrl = getNbaStatsUrl(player.pid, player.name)
 

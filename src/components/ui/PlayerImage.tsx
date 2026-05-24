@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import { getHeadshotUrl } from '@/lib/utils'
 
 interface PlayerImageProps {
   playerId: number
@@ -35,7 +36,7 @@ export default function PlayerImage({
 
   return (
     <Image
-      src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${playerId}.png`}
+      src={getHeadshotUrl(playerId)}
       alt={playerName}
       fill
       sizes={sizes}

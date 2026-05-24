@@ -1,3 +1,7 @@
+export function getHeadshotUrl(playerId: number | string): string {
+  return `https://cdn.nba.com/headshots/nba/latest/1040x760/${playerId}.png`
+}
+
 export function getJerseyUrl(playerName: string): string {
   const query = encodeURIComponent(`${playerName} jersey`)
   return `https://store.nba.com/memphis-grizzlies/?query=${query}`
